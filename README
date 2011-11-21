@@ -1,0 +1,17 @@
+* STILL IN DEVELOPMENT *
+This readme is mainly for myself, when I switch back and forth between this project and others. Its still in development so it should be mainly for learning or snippets if you plan to explore or develop from this code.
+
+The goal is to make a file/folder editor for media content stored on a server. The assumption is that the content (mostly) is stored in the artist/album/song structure so it used the structure to clean up the song or filename to remove any excess titles etc.
+
+Built in java with just a single .java file.
+Inside the MusicNamer directory
+
+Compile through command line:
+javac MusicNamer.java
+
+And then run MusicNamer:
+java MusicNamer Demo
+
+Where Demo is the name of the sample content folder to run the renaming on. You should be careful to not run it directly on the container or unbacked-up files since the code is renaming files and is not even half done.
+
+I included a zip with all the demo files in case you want to restore them -> original_demo.zip. Just delete the Demo and unzip them to restore. (probably want to keep a back of these or your own demo files somewhere too)
