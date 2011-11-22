@@ -5,7 +5,9 @@ import java.util.regex.*;
 
 public class MusicNamer{
 
-  /** Main program */
+  /**
+    Main program
+  **/
   public static void main(String[] argv) {
 
     /******* Create a new directory lister ********/
@@ -22,7 +24,9 @@ public class MusicNamer{
 }
 
 
-/* directory lister*/
+/*
+  Iterates over a directory and all children directories
+*/
 class DirectoryTree {
   // debug boolean for system.out.print statements
   public static final boolean DEBUG = true;
@@ -44,7 +48,9 @@ class DirectoryTree {
       System.err.println("Unknown: " + s);
   }
 
-  /** doFile - process one regular file. */
+  /**
+    Process one regular file.
+  **/
   public static void processFile(File f) {
     String file_path = f.getPath();
     String file_name = f.getName();
@@ -52,10 +58,16 @@ class DirectoryTree {
     // TODO need to take into account files without a file type
     String new_file_name = file_directory + processFileName(f);
     File new_file = new File( new_file_name );
-    System.out.println(new_file_name);
-    f.renameTo(new_file);
 
-
+    // not going to rename files in debug mode - just a coding convience
+    if (DEBUG)
+      {
+        System.out.println( "New File Name: " + new_file_name);
+      }
+    else
+      {
+        f.renameTo(new_file);
+      }
   }
 
   /**
@@ -113,7 +125,7 @@ class DirectoryTree {
 
       currently unsupported but on the list:
         (content some more text)
-        content -
+        content - (done)
   **/
   public static String removeContent(String file_name, String remove_content)
   {
@@ -121,12 +133,19 @@ class DirectoryTree {
     if (remove_content != null)
     {
       // Support word inside parenthesis inside parenthesis
-       String regex_pattern_parenthesis = "[\\(]" + remove_content + "[\\)]";
-       // Supports word at beginning or end or surrounded by spaces
-       String regex_pattern = "\\b"+ remove_content + "\\b";
+      String regex_pattern_parenthesis = "[\\(]" + remove_content + "[\\)]";
+     // Supports word at beginning or end or surrounded by spaces
+     String regex_pattern = "\\b"+ remove_content + "\\b";
+     //Remove beginning Track numbers
+        // TODO Take into account songs with numbers in the title
+     String regex_track_numbers = "^\\d++";
+     // remove left over punctuation at the beginning of the track name
+     String regex_cleaning = "^[\\s[^\\w]]++";
 
        file_name = runRegex(file_name, regex_pattern_parenthesis);
        file_name = runRegex(file_name, regex_pattern);
+       file_name = runRegex(file_name, regex_track_numbers);
+       file_name = runRegex(file_name, regex_cleaning);
     }
 
     return file_name;
@@ -139,9 +158,23 @@ class DirectoryTree {
   public static String runRegex(String file_name, String regex)
   {
       // TODO add support for additional content inside parenthesis
-      // TODO add support for trailing -
       Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
       Matcher matcher = pattern.matcher(file_name);
+
+      if (DEBUG)
+      {
+        System.out.println("REGEX: "+regex);
+        boolean found = false;
+        while (matcher.find()) {
+            System.out.println("I found the text "+matcher.group() +
+            " starting at " + "index "+matcher.start()+
+            " and ending at index "+matcher.end());
+            found = true;
+        }
+        if(!found){
+            System.out.println("No match found.");
+        }
+      }
 
       // remove the text
       file_name = matcher.replaceAll("");
